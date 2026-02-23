@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xem Quẻ Mai Hoa Dịch Số - Nguyễn Hồng Quân</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f4f6f8;
+    margin:0;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    margin-top:20px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+h1{ text-align:center;color:#8b0000; }
+.card{
+    border:1px solid #ddd;
+    padding:15px;
+    margin-top:15px;
+    border-radius:8px;
+    background:#fafafa;
+}
+button{
+    padding:10px 20px;
+    font-size:16px;
+    background:#8b0000;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+select,input{ padding:8px;width:100%;margin-top:5px; }
+.highlight{ color:#8b0000;font-weight:bold; }
+
+/* ===== Thanh vận khí ===== */
+.vankhi-bar{
+    width:100%;
+    height:22px;
+    background:#eee;
+    border-radius:12px;
+    overflow:hidden;
+}
+.vankhi-level{
+    height:100%;
+    width:0%;
+    background:linear-gradient(to right,#cc0000,#ffcc00,#00aa00);
+    transition:width 0.6s;
+}
+.vankhi-text{ text-align:center;margin-top:6px;font-weight:bold; }
+
+/* ===== Vòng Ngũ Hành ===== */
+.nguhanh-box{
+    position:relative;
+    width:260px;
+    height:260px;
+    margin:auto;
+}
+.nguhanh-circle{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border:2px solid #ccc;
+    border-radius:50%;
+    animation:xoay 25s linear infinite;
+}
+@keyframes xoay{
+    from{transform:rotate(0)}
+    to{transform:rotate(360deg)}
+}
+
+.hanh{
+    position:absolute;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+.kim{background:#999; top:-10px; left:100px;}
+.moc{background:#2e8b57; top:90px; right:-10px;}
+.thuy{background:#1e90ff; bottom:-10px; right:60px;}
+.hoa{background:#cc0000; bottom:-10px; left:60px;}
+.tho{background:#8b5a2b; top:90px; left:-10px;}
+
+.the-active{ box-shadow:0 0 15px #000; transform:scale(1.2);}
+.dung-active{ box-shadow:0 0 15px #ffcc00; transform:scale(1.2);}
+
+/* ===== Mũi tên ===== */
+svg{
+    position:absolute;
+    top:0;left:0;
+}
+.arrow{
+    stroke-width:4;
+    fill:none;
+    stroke:#888;
+    marker-end:url(#arrowhead);
+}
+.arrow-sinh{
+    stroke:#00aa00;
+    stroke-dasharray:8;
+    animation:dash 1s linear infinite;
+}
+.arrow-khac{
+    stroke:#cc0000;
+    animation:blink 0.6s infinite;
+}
+.arrow-hoa{
+    stroke:#ffcc00;
+}
+@keyframes dash{
+    to{stroke-dashoffset:-16;}
+}
+@keyframes blink{
+    50%{opacity:0.3;}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Mai Hoa Dịch Số – Xem Nhanh Vận Khí</h1>
+
+<div class="card">
+<b>Nguyên lý lấy quẻ</b><br>
+Tĩnh tâm vài giây, nghĩ rõ việc cần hỏi.<br>
+Nhập:
+<ul>
+<li>Seri tiền lấy ngẫu nhiên trong sấp khoảng 10 tờ</li>
+<li>Hoặc 2 số ngẫu nhiên từ 01 – 99</li>
+</ul>
+Seri 1 = <b>Thể</b> (bản thân)<br>
+Seri 2 = <b>Dụng</b> (việc cần hỏi)
+</div>
+
+<div class="card">
+<b>Nhập dữ liệu</b><br>
+Seri 1 hoặc số ngẫu nhiên 01-99:
+<input id="the">
+Seri 2 hoặc số ngẫu nhiên 01-99:
+<input id="dung">
+
+<select id="mucdich">
+<option value="congviec">Công việc</option>
+<option value="taichinh">Tài chính</option>
+<option value="tinhcam">Tình cảm</option>
+<option value="muaxe">Mua xe</option>
+<option value="batdau">Khởi sự</option>
+<option value="dixa">Đi xa</option>
+<option value="suckhoe">Sức khỏe</option>
+</select>
+
+<br><br>
+<button onclick="xemQue()">Xem quẻ</button>
+</div>
+
+<div class="card" id="ketqua"></div>
+
+<div class="card">
+<b>Vận khí</b>
+<div class="vankhi-bar">
+<div class="vankhi-level" id="vankhiLevel"></div>
+</div>
+<div class="vankhi-text" id="vankhiText">Chưa xem quẻ</div>
+</div>
+
+<div class="card">
+<b>Vòng Ngũ Hành</b>
+<div class="nguhanh-box">
+
+<div class="nguhanh-circle"></div>
+
+<div class="hanh kim" id="Kim">Kim</div>
+<div class="hanh moc" id="Mộc">Mộc</div>
+<div class="hanh thuy" id="Thủy">Thủy</div>
+<div class="hanh hoa" id="Hỏa">Hỏa</div>
+<div class="hanh tho" id="Thổ">Thổ</div>
+
+<svg width="260" height="260">
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="7"
+refX="10" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+</marker>
+</defs>
+<line id="arrowLine" class="arrow" x1="0" y1="0" x2="0" y2="0"/>
+</svg>
+
+</div>
+</div>
+<div class="footer">
+<br><br>
+<b>Quẻ phản ánh xu hướng vận khí hiện tại, muốn luận sâu theo hoàn cảnh cụ thể nên liên hệ</b>
+<br>
+<a href="https://web.facebook.com/nguyenquan.xemkinhdichmienphi" target="_blank">
+Dịch Sư Nguyễn Quân
+</a>
+</div>
+</div>
+
+<script>
+function tongSo(str){
+let s=0;
+for(let c of str){ if(!isNaN(c)) s+=parseInt(c); }
+return s;
+}
+function chiaBat(s){ let r=s%8; return r==0?8:r; }
+
+const batquai={
+1:{ten:"Càn",hanh:"Kim"},
+2:{ten:"Đoài",hanh:"Kim"},
+3:{ten:"Ly",hanh:"Hỏa"},
+4:{ten:"Chấn",hanh:"Mộc"},
+5:{ten:"Tốn",hanh:"Mộc"},
+6:{ten:"Khảm",hanh:"Thủy"},
+7:{ten:"Cấn",hanh:"Thổ"},
+8:{ten:"Khôn",hanh:"Thổ"}
+};
+
+function quanHe(the,dung){
+if(the==dung) return "Hòa";
+if(
+(the=="Mộc"&&dung=="Hỏa")||
+(the=="Hỏa"&&dung=="Thổ")||
+(the=="Thổ"&&dung=="Kim")||
+(the=="Kim"&&dung=="Thủy")||
+(the=="Thủy"&&dung=="Mộc")
+) return "Thể sinh Dụng";
+
+if(
+(dung=="Mộc"&&the=="Hỏa")||
+(dung=="Hỏa"&&the=="Thổ")||
+(dung=="Thổ"&&the=="Kim")||
+(dung=="Kim"&&the=="Thủy")||
+(dung=="Thủy"&&the=="Mộc")
+) return "Dụng sinh Thể";
+
+if(
+(the=="Mộc"&&dung=="Thổ")||
+(the=="Thổ"&&dung=="Thủy")||
+(the=="Thủy"&&dung=="Hỏa")||
+(the=="Hỏa"&&dung=="Kim")||
+(the=="Kim"&&dung=="Mộc")
+) return "Thể khắc Dụng";
+
+return "Dụng khắc Thể";
+}
+
+/* ===== GIỮ NGUYÊN NỘI DUNG CỦA THẦY ===== */
+function luanTheoMucDich(muc,qh){
+
+let text="";
+
+if(muc=="congviec"){
+    if(qh=="Dụng sinh Thể")
+        text="Công việc có người hỗ trợ, hoàn cảnh thuận lợi. Đây là thời điểm nên chủ động triển khai.";
+    else if(qh=="Thể sinh Dụng")
+        text="Bạn đang phải bỏ nhiều công sức. Thành quả đến chậm, cần kiên trì.";
+    else if(qh=="Dụng khắc Thể")
+        text="Áp lực công việc cao, dễ gặp cạnh tranh hoặc trở ngại.";
+    else if(qh=="Thể khắc Dụng")
+        text="Bạn đang nắm thế chủ động, phù hợp thay đổi hoặc quyết định.";
+    else
+        text="Công việc ổn định, tiến chậm nhưng chắc.";
+}
+
+if(muc=="taichinh"){
+    if(qh=="Dụng sinh Thể")
+        text="Dòng tiền có xu hướng tốt lên, có cơ hội tăng thu.";
+    else if(qh=="Thể sinh Dụng")
+        text="Chi nhiều hơn thu, nên kiểm soát tài chính.";
+    else if(qh=="Dụng khắc Thể")
+        text="Nguy cơ hao tài hoặc rủi ro tài chính.";
+    else if(qh=="Thể khắc Dụng")
+        text="Có thể chủ động xử lý nợ hoặc tái cấu trúc tài chính.";
+    else
+        text="Tài chính ở trạng thái cân bằng.";
+}
+
+if(muc=="tinhcam"){
+    if(qh=="Dụng sinh Thể")
+        text="Đối phương có thiện ý, quan hệ dễ tiến triển.";
+    else if(qh=="Thể sinh Dụng")
+        text="Bạn đang cho đi nhiều hơn, cần xem lại sự cân bằng.";
+    else if(qh=="Dụng khắc Thể")
+        text="Quan hệ dễ phát sinh mâu thuẫn hoặc áp lực.";
+    else if(qh=="Thể khắc Dụng")
+        text="Bạn đang giữ thế chủ động, nên mềm mỏng để hài hòa.";
+    else
+        text="Tình cảm ổn định.";
+}
+
+if(muc=="muaxe"){
+    if(qh=="Dụng sinh Thể")
+        text="Có thể mua, dễ chọn được xe hoặc tài sản phù hợp.";
+    else if(qh=="Thể sinh Dụng")
+        text="Dễ phát sinh chi phí thêm sau khi mua.";
+    else if(qh=="Dụng khắc Thể")
+        text="Chưa nên mua lúc này.";
+    else if(qh=="Thể khắc Dụng")
+        text="Có thể mua nhưng cần kiểm tra kỹ.";
+    else
+        text="Mua được nhưng lợi ích không nhiều.";
+}
+
+if(muc=="batdau"){
+    if(qh=="Dụng sinh Thể")
+        text="Thời điểm thuận để bắt đầu.";
+    else if(qh=="Dụng khắc Thể")
+        text="Chưa nên khởi sự, nên chờ thời.";
+    else
+        text="Có thể làm nhưng cần chuẩn bị kỹ.";
+}
+
+if(muc=="dixa"){
+    if(qh=="Dụng sinh Thể")
+        text="Đi xa hoặc thay đổi sẽ có lợi.";
+    else if(qh=="Dụng khắc Thể")
+        text="Nên thận trọng khi thay đổi.";
+    else
+        text="Có thể đi nhưng không nên quyết định vội.";
+}
+
+if(muc=="suckhoe"){
+    if(qh=="Dụng sinh Thể")
+        text="Sức khỏe ổn, dễ hồi phục.";
+    else if(qh=="Dụng khắc Thể")
+        text="Cơ thể đang suy yếu, nên nghỉ ngơi.";
+    else
+        text="Cần giữ sinh hoạt điều độ.";
+}
+
+return text;
+}
+
+/* ===== Responsive cho điện thoại ===== */
+@media (max-width:600px){
+
+.container{
+    margin:5px;
+    padding:12px;
+}
+
+h1{
+    font-size:20px;
+}
+
+.card{
+    padding:12px;
+}
+
+button{
+    width:100%;
+    font-size:18px;
+    padding:12px;
+}
+
+input,select{
+    font-size:16px;
+}
+
+/* Thu nhỏ vòng ngũ hành */
+.nguhanh-box{
+    width:200px;
+    height:200px;
+}
+
+.hanh{
+    width:50px;
+    height:50px;
+    font-size:12px;
+}
+}
+
+function diemVanKhi(qh){
+if(qh=="Dụng sinh Thể") return {diem:9,text:"Cát (9/10)"};
+if(qh=="Thể khắc Dụng") return {diem:7,text:"Khá (7/10)"};
+if(qh=="Hòa") return {diem:5,text:"Bình (5/10)"};
+if(qh=="Thể sinh Dụng") return {diem:4,text:"Hao (4/10)"};
+return {diem:2,text:"Hung (2/10)"};
+}
+
+/* ===== Vẽ mũi tên ===== */
+function veMuiTen(the,dung,qh){
+document.querySelectorAll(".hanh").forEach(e=>{
+e.classList.remove("the-active","dung-active");
+});
+
+document.getElementById(the).classList.add("the-active");
+document.getElementById(dung).classList.add("dung-active");
+
+let p1=document.getElementById(the).getBoundingClientRect();
+let p2=document.getElementById(dung).getBoundingClientRect();
+let box=document.querySelector(".nguhanh-box").getBoundingClientRect();
+
+let x1=p1.left-box.left+30;
+let y1=p1.top-box.top+30;
+let x2=p2.left-box.left+30;
+let y2=p2.top-box.top+30;
+
+let line=document.getElementById("arrowLine");
+line.setAttribute("x1",x1);
+line.setAttribute("y1",y1);
+line.setAttribute("x2",x2);
+line.setAttribute("y2",y2);
+
+line.className="arrow";
+if(qh.includes("sinh")) line.classList.add("arrow-sinh");
+else if(qh.includes("khắc")) line.classList.add("arrow-khac");
+else line.classList.add("arrow-hoa");
+}
+
+function xemQue(){
+let theSo=chiaBat(tongSo(document.getElementById("the").value));
+let dungSo=chiaBat(tongSo(document.getElementById("dung").value));
+let muc=document.getElementById("mucdich").value;
+
+let theBQ=batquai[theSo];
+let dungBQ=batquai[dungSo];
+
+let qh=quanHe(theBQ.hanh,dungBQ.hanh);
+let luan=luanTheoMucDich(muc,qh);
+
+document.getElementById("ketqua").innerHTML=
+"Thể: <b>"+theBQ.ten+" ("+theBQ.hanh+")</b><br>"+
+"Dụng: <b>"+dungBQ.ten+" ("+dungBQ.hanh+")</b><br>"+
+"Quan hệ: <b>"+qh+"</b><br><br>"+luan;
+
+let vk=diemVanKhi(qh);
+document.getElementById("vankhiLevel").style.width=(vk.diem*10)+"%";
+document.getElementById("vankhiText").innerText=vk.text;
+
+veMuiTen(theBQ.hanh,dungBQ.hanh,qh);
+}
+</script>
+
+</body>
+</html>
