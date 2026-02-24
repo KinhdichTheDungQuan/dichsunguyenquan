@@ -22,6 +22,45 @@ body{
     box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
+/* ===== Responsive cho điện thoại ===== */
+@media (max-width:600px){
+
+.container{
+    margin:5px;
+    padding:12px;
+}
+
+h1{
+    font-size:20px;
+}
+
+.card{
+    padding:12px;
+}
+
+button{
+    width:100%;
+    font-size:18px;
+    padding:12px;
+}
+
+input,select{
+    font-size:16px;
+}
+
+/* Thu nhỏ vòng ngũ hành */
+.nguhanh-box{
+    width:200px;
+    height:200px;
+}
+
+.hanh{
+    width:50px;
+    height:50px;
+    font-size:12px;
+}
+}   
+    
 h1{ text-align:center;color:#8b0000; }
 .card{
     border:1px solid #ddd;
@@ -347,45 +386,6 @@ if(muc=="suckhoe"){
 return text;
 }
 
-/* ===== Responsive cho điện thoại ===== */
-@media (max-width:600px){
-
-.container{
-    margin:5px;
-    padding:12px;
-}
-
-h1{
-    font-size:20px;
-}
-
-.card{
-    padding:12px;
-}
-
-button{
-    width:100%;
-    font-size:18px;
-    padding:12px;
-}
-
-input,select{
-    font-size:16px;
-}
-
-/* Thu nhỏ vòng ngũ hành */
-.nguhanh-box{
-    width:200px;
-    height:200px;
-}
-
-.hanh{
-    width:50px;
-    height:50px;
-    font-size:12px;
-}
-}
-
 function diemVanKhi(qh){
 if(qh=="Dụng sinh Thể") return {diem:9,text:"Cát (9/10)"};
 if(qh=="Thể khắc Dụng") return {diem:7,text:"Khá (7/10)"};
@@ -451,4 +451,5 @@ veMuiTen(theBQ.hanh,dungBQ.hanh,qh);
 </body>
 
 </html>
+
 
